@@ -21,7 +21,7 @@ TBD
 ```bash
 helm upgrade --install gitlab-server ./gitlab-server/ \
   --set efs_id=fs-2552f3a7 \
-  --set hosts.domain=test-gitlab.to-the.cloud \
+  --set hosts.domain=gitlab.example.com \
   --set hosts.aws_region=us-east-1\
   --set postgresql.install=true \
   --set redis.install=true
