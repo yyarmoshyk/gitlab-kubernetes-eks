@@ -29,6 +29,8 @@ helm upgrade --install gitlab-server ./gitlab-server/ \
 
 If you have PGSql and Redis running outside of your EKS cluster:
 ```bash
+  --set postgresql.install=false \
+  --set redis.install=false \
   --set postgresql.postgresqlHostName=pgsq-alskdjl.amazon.aws.com \
   --set postgresql.postgresqlUsername=gitlab_user \
   --set postgresql.postgresqlPostgresPassword=super_secret_password \
