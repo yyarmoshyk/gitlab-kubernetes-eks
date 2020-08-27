@@ -1,0 +1,127 @@
+# Default values for gitlab-server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: gitlab/gitlab-ce
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+efs_id: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  ports: ["80","22","443"]
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+hosts:
+  domain: ""
+  aws_region: ""
+
+gitlab_omnibus_config:
+  external_url: "https://{{ .Release.Name }}"
+  pages_external_url: "http://pages-{{ .Release.Name }}.{{ .Values.hosts.domain }}"
+  postgresql.enable: false
+  prometheus.enable: false
+  gitlab_rails_db_pool: 1
+  gitlab_rails_db_port: 5432
+  gitlab_rails_db_database: "{{ .Values.postgresql.postgresqlDatabase }}"
+  gitlab_rails_db_host: "{{ .Release.Name }}-postgresql"
+  gitlab_rails_db_username: "{{ .Values.postgresql.postgresqlUsername }}"
+  gitlab_rails_db_password: "{{ .Values.postgresql.postgresqlPostgresPassword }}"
+  redis_enable: false
+  gitlab_rails_redis_host: "{{ .Release.Name }}-redis"
+  gitlab_rails_redis_port: 6379
+  gitlab_rails_smtp_enable: true
+  gitlab_rails_smtp_enable_starttls_auto: true
+  gitlab_rails_smtp_port: 587
+  gitlab_rails_smtp_authentication: 'login'
+  gitlab_rails_smtp_user_name: 'AAAAAAAAAAAAAAAAAAAA'
+  gitlab_rails_smtp_password: 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'
+  gitlab_pages.inplace_chroot: true
+  prometheus_monitoring.enable: false
+  letsencrypt.enable: false
+
+postgresql:
+  postgresqlUsername: postgres
+  postgresqlPassword: abcABC123!
+  postgresqlDatabase: gitlabhq_production
+  install: true
+  image:
+    tag: 11.7.0
+  usePasswordFile: false
+  master:
+    podAnnotations:
+      postgresql.gitlab/init-revision: "1"
+  metrics:
+    enabled: false
+
+redis:
+  install: false
+  host_name: "redis"
