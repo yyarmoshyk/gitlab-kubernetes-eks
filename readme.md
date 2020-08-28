@@ -1,10 +1,13 @@
 ## Description
 This repository has a helm chart that can be used to provision Gitlab in EKS.
-There are multiple points why I prepared custom chart insteed of using the [default one](https://charts.gitlab.io/):
+There are multiple points why I prepared custom chart instead of using the [official one](https://charts.gitlab.io/):
 1. I want to use EFS as persistent volume for gitlab and pgsql
 2. I want to use NLB or ELB as ingress controller instead of the Nginx
 3. I had gitlab running in ECS in FARGATE mode and this is the target to achieve with this chart. This is why I need the PV to be EFS.
 4. Gitlab didn't launch from the default chart and required 2 nodes to launch all pods while Community edition can be launced on the single EC2 instance.
+## Provision EKS in AWS
+The terraform instructions to provision eKs can be found in the [aws-kubernetes-setup-terraform repository](https://github.com/yyarmoshyk/aws-kubernetes-setup-terraform)
+
 ## Install aws EFS driver
 ### EC2+Fargate:
 ```bash
